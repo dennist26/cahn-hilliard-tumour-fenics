@@ -70,4 +70,9 @@ iv) The file 'useful_functions.py' contains all functions needed for the program
 
 v) The file 'main_convergence_rate.py' (see the directory 'program_1D_convergence') can
 calculate the errors in some specific norms and the experimental orders of convergence (EOC), 
-and save them into files.
+and save them into files. You can run the program with the command:
+
+> python3 main_convergence_rate.py
+
+Note that you have run 'main_program.py' before, with some different mesh sizes, and 
+with a reference solution. Therefore you have to change the mesh size etc. in 'settings.py'.
