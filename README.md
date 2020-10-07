@@ -50,17 +50,23 @@ tumour system in three dimensions on the cube (0,3)^3.
 
 # Programs:
 
-i) In each directory you can run the program with the command 'python3 main_program.py'. 
+i) In each directory you can run the program with the command:
+
+> python3 main_program.py
+
 
 ii) The file 'settings.py' contains all settings: 
 Parameters for the finite element discretization (mesh size, polynom degree, quadrature degree etc.) 
 and other settings, e.g. for saving the output (formats like .vtu, .xml, .hdf4), handling initial 
 values from a file, etc.
 
+
 iii) The file 'class_Tumour.py' contains all model parameters and initializes the 
 weak formulation of the system of partial differential equations.
 
+
 iv) The file 'useful_functions.py' contains all functions needed for the program.
+
 
 v) The file 'main_convergence_rate.py' (see the directory 'program_1D_convergence') can
 calculate the errors in some specific norms and the experimental orders of convergence (EOC), 
