@@ -8,7 +8,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-
+''' Calculate errors '''
 def my_errornorm(uref, u, norm_type='L2', degree_rise=3):
     '''
     Info:
@@ -58,6 +58,7 @@ def my_errornorm(uref, u, norm_type='L2', degree_rise=3):
 
 
 
+''' Compute convergence rate '''
 def convergence_rate(N_vec,L2_vec,H10_vec,Linf_vec,path):
     file = open(path+"convergence_rate.txt","w")
     print('\nConvergence rates:  N   L2Linf   L2L2   L2H10')
@@ -70,8 +71,8 @@ def convergence_rate(N_vec,L2_vec,H10_vec,Linf_vec,path):
             "   " + str(r_H10))
 
 
-        file.write(str(1) + "/" + str(N_vec[i]) + " & " + str(r_Linf) + " & "
-            + str(r_L2) + " & " + str(r_H10) + " \\\\"+ "\n")
+        file.write(str(N_vec[i]) + "  " + str(r_Linf) + "  "
+            + str(r_L2) + "  " + str(r_H10) + "\n")
 
     file.close()
 
@@ -79,7 +80,7 @@ def convergence_rate(N_vec,L2_vec,H10_vec,Linf_vec,path):
 
 
 
-
+''' initialze form compiler '''
 def parameter_form_compiler(discr):
     # Form compiler options
     parameters["ghost_mode"] = "shared_facet"
@@ -89,7 +90,9 @@ def parameter_form_compiler(discr):
     parameters['allow_extrapolation'] = False        # test
     parameters["std_out_all_processes"] = False     # turn off redundant output in parallel
 
+
     if discr.quadr_lump:
+        ''' Mass lumping '''
         '''
         Maybe this won't be supported in future...
         For another way see: https://comet-fenics.readthedocs.io/en/latest/demo/tips_and_tricks/mass_lumping.html
@@ -101,13 +104,15 @@ def parameter_form_compiler(discr):
         parameters["form_compiler"]["representation"] = "quadrature"
         parameters["form_compiler"]["quadrature_rule"] = "vertex"
         parameters["form_compiler"]["quadrature_degree"] = 1    # degree of quadrature
+
     else:
+        ''' Gaussian quadrature rules '''
         parameters["form_compiler"]["representation"] = "uflacs"   # this helps that "large" problems compile
         parameters["form_compiler"]["quadrature_degree"] = discr.quadr_degree    # degree of quadrature
 
 
 
-
+''' print some stuff '''
 def print_info(discr, config, model, mpi_rank):
     if mpi_rank>0:
         return
@@ -136,7 +141,9 @@ def print_info(discr, config, model, mpi_rank):
 
 
 
-
+'''
+mesh adaption algorithm
+'''
 def refine_mesh(discr, model, mpi_comm, u_old, j):
 
     '''
@@ -180,7 +187,7 @@ def refine_mesh(discr, model, mpi_comm, u_old, j):
         bool_break = True
         markers = MeshFunction("bool",mesh_tmp,discr.dimension-1,False)
 
-        if discr.dimension==1:  # irgendwie gehts nur so in 1D
+        if discr.dimension==1:  # in 1 dimension, it works only like this...
             for c in cells(mesh_tmp):
                 p = c.midpoint()
                 h = c.h()
@@ -189,7 +196,7 @@ def refine_mesh(discr, model, mpi_comm, u_old, j):
                     markers[c] = True
                     bool_break = False
         else:
-            for facet in facets(mesh_tmp):   # facets(mesh), nicht cells(mesh) !!!
+            for facet in facets(mesh_tmp):   # facets(mesh), not cells(mesh) !!!
                 p = facet.midpoint()
                 h = min([edge.length() for edge in edges(facet)])
                 if  u_tmp(p)<1-discr.adapt_delta  and u_tmp(p)>-1+discr.adapt_delta  and h>=hmin-DOLFIN_EPS:
@@ -214,6 +221,7 @@ def refine_mesh(discr, model, mpi_comm, u_old, j):
     return mesh_tmp
 
 
+''' initialize function spaces and functions '''
 def init_function(discr, config, model, mesh, u_old=None, u0_old=None):
     ''' initialize function '''
     P1 = FiniteElement("Lagrange", mesh.ufl_cell(), discr.polynom_degree)
@@ -229,6 +237,7 @@ def init_function(discr, config, model, mesh, u_old=None, u0_old=None):
     return (u, u0)
 
 
+''' initialize mesh '''
 def init_mesh(discr, mpi_comm, N=None):
     ''' initialize mesh '''
     if N==None:
@@ -253,7 +262,7 @@ def init_mesh(discr, mpi_comm, N=None):
     return mesh
 
 
-
+''' configurate the properties of the Newton Solver '''
 def init_Newton_solver():
     solver = NewtonSolver()
     #solver.parameters['convergence_criterion'] = 'incremental'
@@ -297,7 +306,7 @@ def init_Newton_solver():
     return solver
 
 
-
+''' save the output '''
 def save_output(discr, config, model, u, mesh, j, t):
     ''' save mesh to png '''
     if config.save_mesh_to_png and (j%config.output_freq==0 or j==discr.N_time):
@@ -352,6 +361,8 @@ def save_output(discr, config, model, u, mesh, j, t):
             file_sigma_xml << Z
         '''
 
+
+''' open a vtu-file with FEniCS ''' # fenics closes it automatically when finished
 def open_vtu(config, model):
     file0 = None
     file1 = None
@@ -365,6 +376,7 @@ def open_vtu(config, model):
         file2 = File(config.output_path + "/sigma.pvd", "compressed")
     return (file0, file1, file2)
 
+''' save output in a vtu-file with FEniCS '''
 def save_output_vtu(discr, config, model, u, j, t, file0, file1=None, file2=None):
     if config.save_as_vtu and (j%config.output_freq==0 or j==discr.N_time):
         file0 << (u.split()[0], t)
