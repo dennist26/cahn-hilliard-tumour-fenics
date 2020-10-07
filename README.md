@@ -74,6 +74,5 @@ and save them into files. You can run the program with the command:
 
 > python3 main_convergence_rate.py
 
-Note that you have run 'main_program.py' before running 'main_convergence_rate.py', with some different mesh sizes, and 
-with a reference solution. Don't forget to change some settings like mesh size, polynom degree,
-quadrature degree etc. in 'settings.py'.
+Note that you have run 'main_program.py' before running 'main_convergence_rate.py'. Don't forget to use the desired mesh size, polynom degree,
+quadrature degree for the coarse solutions and for the reference solution. You can change these settings in 'settings.py'.
