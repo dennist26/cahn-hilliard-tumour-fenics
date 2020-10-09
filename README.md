@@ -1,6 +1,9 @@
 # cahn-hilliard-tumour-fenics
 A Finite Element Approximation of a Cahn--Hilliard Tumour Model with FEniCS,
-by Dennis Trautwein
+by Dennis Trautwein (2020).
+
+DOI of the original tumour model of Garcke, Lam, Sitka and Styles:
+https://doi.org/10.1142/S0218202516500263
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
