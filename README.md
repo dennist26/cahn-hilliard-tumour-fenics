@@ -1,5 +1,5 @@
 # cahn-hilliard-tumour-fenics
-A finite element approximation of a Cahn--Hilliard tumour model with FEniCS,
+A Finite Element Approximation of a Cahn--Hilliard Tumour Model with FEniCS,
 by Dennis Trautwein
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,7 +29,7 @@ See e.g. the following link for download and installation:
 # Directories:
 
 1) The program 'ch_tumour_simple.py' is a simplified version of our programs. 
-We modified the demo 'demo_cahn-hilliard.py' from the FEniCS homepage:
+It is a modification of the demo 'demo_cahn-hilliard.py' from the FEniCS homepage:
 
  https://fenicsproject.org/docs/dolfin/latest/python/demos.html
 
